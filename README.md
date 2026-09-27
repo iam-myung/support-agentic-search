@@ -142,15 +142,13 @@ migrations/               # Alembic
 fixtures/corpus/          # 示例语料
 deploy/                   # 试点回退 Runbook
 docs/                     # GitHub Pages 演示页 + 内嵌 MP4
-videos/support-agent-demo/# HyperFrames 说明片源码（预览工程）
 tests/                    # pytest
 ```
 
 ## 演示动画
 
 - **在线页**：https://iam-myung.github.io/support-agentic-search/  
-- **仓库媒体**：`docs/media/support-agent-demo.mp4`（约 6MB）  
-- **源工程**：`videos/support-agent-demo/`（HyperFrames；可本地 `npx hyperframes preview`）
+- **仓库媒体**：`docs/media/support-agent-demo.mp4`（约 6MB）
 
 ## 安全注意
 

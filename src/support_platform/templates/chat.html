@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>客服对话 · Agentic Search</title>
+  <link rel="stylesheet" href="/static/chat.css" />
+  <script src="/static/chat.js" defer></script>
+</head>
+<body>
+  <main id="chat" class="chat" data-chat data-conversation>
+    <header class="chat-header">
+      <h1>客服对话</h1>
+      <p class="lede">多轮提问，查看公开过程与建议；网络结论会标注来源披露。</p>
+      <p id="runtime-banner" class="banner error" role="status" hidden></p>
+    </header>
+
+    <section id="auth-panel" class="panel auth" data-auth-login>
+      <h2>登录</h2>
+      <form id="login-form" data-auth-login>
+        <label for="username">用户名</label>
+        <input id="username" name="username" type="text" autocomplete="username" />
+        <label for="password">密码</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" />
+        <button id="login-btn" type="submit">登录</button>
+        <p id="login-error" class="banner error" role="alert" hidden></p>
+      </form>
+      <div id="session-bar" class="session-bar" hidden>
+        <span id="session-label"></span>
+        <button id="logout-btn" type="button">退出</button>
+      </div>
+    </section>
+
+    <section id="messages" class="messages" aria-live="polite" data-messages></section>
+
+    <form id="chat-form" class="composer" data-chat-composer>
+      <label for="chat-input">消息</label>
+      <textarea id="chat-input" name="content" data-chat-input rows="3"
+                maxlength="4000" placeholder="描述客户问题，可追问…" required></textarea>
+      <button id="send-btn" type="submit">发送</button>
+    </form>
+
+    <section id="steps" class="panel steps" data-public-steps aria-label="公开过程">
+      <h2>思考过程</h2>
+      <p class="steps-hint">公开步骤轨迹（检索了什么、用了哪些来源）；不含模型内心独白 / Prompt / 密钥。</p>
+      <ol id="steps-list" class="steps-list"></ol>
+    </section>
+
+    <section id="suggestion" class="panel suggestion" data-suggestion aria-label="建议">
+      <h2>建议</h2>
+      <p id="summary" class="summary" data-summary></p>
+      <p id="knowledge-basis" class="knowledge-basis" data-knowledge-basis
+         data-basis-local="LOCAL" data-basis-web="WEB" data-basis-mixed="MIXED">
+        来源：<span id="basis-value">—</span>
+      </p>
+      <p id="disclosure" class="disclosure" data-disclosure hidden>
+        本结论非基于本地知识库（网络来源 / 开放域补充，请人工核验）。
+      </p>
+      <ul id="claims" class="claims" data-claims>
+        <!-- claim provenance: LOCAL | WEB -->
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

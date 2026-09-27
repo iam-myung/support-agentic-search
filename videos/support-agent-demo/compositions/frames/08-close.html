@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh">
+  <head><meta charset="UTF-8" /><title>08-close</title></head>
+  <body>
+    <template>
+      <style>
+        #root { position:absolute; inset:0; overflow:hidden; font-family:system-ui,"Segoe UI",sans-serif; color:#f8fafc; }
+        .bg { position:absolute; inset:0; background:#070b10; }
+        .orb { position:absolute; left:50%; top:40%; width:700px; height:700px; transform:translate(-50%,-50%); border-radius:50%; background:radial-gradient(circle,rgba(45,212,191,.35),transparent 65%); filter:blur(20px); }
+        .world { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; will-change:transform; }
+        .kicker { font-family:ui-monospace,Consolas,monospace; letter-spacing:.22em; color:#5eead4; font-size:16px; margin-bottom:22px; }
+        .title { font-size:64px; font-weight:800; letter-spacing:-.04em; margin:0 0 20px; max-width:14ch; line-height:1.08; text-shadow:0 0 40px rgba(45,212,191,.35); }
+        .line { font-size:24px; color:rgba(248,250,252,.68); margin:0 0 12px; }
+        .repo { font-family:ui-monospace,Consolas,monospace; font-size:18px; color:#2dd4bf; margin:0; }
+        .bar { width:160px; height:3px; background:#2dd4bf; margin-top:32px; border-radius:3px; box-shadow:0 0 16px #2dd4bf; transform-origin:center; }
+      </style>
+      <div id="root" data-composition-id="08-close" data-width="1920" data-height="1080" data-duration="6.5">
+        <div id="c-bg" class="clip bg" data-start="0" data-duration="6.5" data-track-index="0"></div>
+        <div id="c-orb" class="clip orb" data-start="0" data-duration="6.5" data-track-index="1"></div>
+        <div id="c-layer" class="clip" data-start="0" data-duration="6.5" data-track-index="2" style="inset:0;position:absolute">
+          <div id="c-world" class="world">
+            <div id="c-k" class="kicker">SUPPORT PLATFORM</div>
+            <h2 id="c-t" class="title">可核对 · 可披露 · 可转人工</h2>
+            <p id="c-l" class="line">架构看得见，数据流说得清，边界守得住</p>
+            <p id="c-r" class="repo">→ 打开仓库 README / 源码继续看</p>
+            <div id="c-bar" class="bar"></div>
+          </div>
+        </div>
+      </div>
+      <script>
+        const root = document.querySelector('[data-composition-id="08-close"]');
+        const tl = gsap.timeline({ paused: true });
+        tl.fromTo(root.querySelector("#c-orb"), { scale: 0.5, opacity: 0 }, { scale: 1.2, opacity: 1, duration: 0.8, ease: "power3.out" }, 0);
+        tl.fromTo(root.querySelector("#c-k"), { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 0.2);
+        tl.fromTo(root.querySelector("#c-t"), { y: 36, opacity: 0, filter: "blur(10px)" }, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.6, ease: "power4.out" }, 0.4);
+        tl.fromTo(root.querySelector("#c-l"), { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 0.9);
+        tl.fromTo(root.querySelector("#c-r"), { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 1.15);
+        tl.fromTo(root.querySelector("#c-bar"), { scaleX: 0 }, { scaleX: 1, duration: 0.45, ease: "power3.inOut" }, 1.4);
+        tl.to(root.querySelector("#c-orb"), { opacity: 0.45, duration: 3.2, ease: "none" }, 1.7);
+        window.__timelines["08-close"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

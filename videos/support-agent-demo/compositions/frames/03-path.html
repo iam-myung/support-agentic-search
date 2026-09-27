@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh">
+  <head><meta charset="UTF-8" /><title>03-path</title></head>
+  <body>
+    <template>
+      <style>
+        #root { position:absolute; inset:0; overflow:hidden; color:#f8fafc; font-family:system-ui,"Segoe UI",sans-serif; }
+        .bg { position:absolute; inset:0; background:#070b10; }
+        .world { position:absolute; inset:0; will-change:transform; }
+        .head { position:absolute; left:100px; top:60px; }
+        .kicker { font-family:ui-monospace,Consolas,monospace; color:#5eead4; letter-spacing:.16em; font-size:16px; }
+        .title { font-size:44px; font-weight:800; margin:8px 0 0; }
+        .q { position:absolute; left:100px; top:170px; max-width:1700px; padding:16px 22px; border-radius:12px; border:1px solid rgba(45,212,191,.3); background:rgba(15,118,110,.12); font-size:22px; }
+        .q span { font-family:ui-monospace,Consolas,monospace; color:#5eead4; margin-right:12px; }
+        .rail { position:absolute; left:100px; right:100px; top:320px; height:4px; background:rgba(248,250,252,.08); border-radius:4px; }
+        .rail-fill { position:absolute; left:100px; top:320px; height:4px; width:0; background:linear-gradient(90deg,#2dd4bf,#0f766e); box-shadow:0 0 12px #2dd4bf; border-radius:4px; }
+        .steps { position:absolute; left:80px; right:80px; top:360px; display:flex; justify-content:space-between; gap:16px; }
+        .step {
+          flex:1; min-height:380px; border-radius:18px; padding:26px 22px;
+          border:1px solid rgba(15,23,42,.08); background:#f4f7f6; color:#0f172a;
+          box-shadow:0 12px 32px rgba(0,0,0,.35); opacity:0.45; filter:saturate(0.7);
+        }
+        .step.on {
+          opacity:1; filter:none;
+          border-color:rgba(15,118,110,.45); background:#fff;
+          box-shadow:0 0 0 3px rgba(45,212,191,.35), 0 16px 40px rgba(0,0,0,.4);
+        }
+        .n { font-family:ui-monospace,Consolas,monospace; color:#0f766e; font-size:15px; font-weight:700; margin-bottom:14px; }
+        .step h3 { margin:0 0 12px; font-size:26px; font-weight:800; color:#0f172a; }
+        .step p { margin:0; font-size:17px; line-height:1.5; color:rgba(15,23,42,.72); }
+        .step.on .n { color:#0d9488; }
+        .step.on h3 { color:#042f2e; }
+        .step.on p { color:rgba(15,23,42,.8); }
+      </style>
+      <div id="root" data-composition-id="03-path" data-width="1920" data-height="1080" data-duration="10.4">
+        <div id="p-bg" class="clip bg" data-start="0" data-duration="10.5" data-track-index="0"></div>
+        <div id="p-layer" class="clip" data-start="0" data-duration="10.5" data-track-index="1" style="inset:0;position:absolute">
+          <div id="p-world" class="world">
+            <div class="head">
+              <div id="p-k" class="kicker">BUSINESS PATH · 单回合</div>
+              <h2 id="p-t" class="title">业务主路径：一次提问如何跑完</h2>
+            </div>
+            <div id="p-q" class="q"><span>SAMPLE</span>密码重置要不要做 MFA？请对照本地政策与公开最佳实践。</div>
+            <div class="rail"></div>
+            <div id="p-fill" class="rail-fill"></div>
+            <div class="steps">
+              <div id="s1" class="step"><div class="n">01</div><h3>提问</h3><p>客服在对话入口提交问题；会话 API 鉴权并写入回合。</p></div>
+              <div id="s2" class="step"><div class="n">02</div><h3>规划</h3><p>Agent 理解目标，决定调用 local_retrieve / web_search。</p></div>
+              <div id="s3" class="step"><div class="n">03</div><h3>调工具</h3><p>白名单工具执行；硬上限：工具 ≤8 · 网搜 ≤5。</p></div>
+              <div id="s4" class="step"><div class="n">04</div><h3>公开步骤</h3><p>界面展示可阅读轨迹，不是原始 CoT / Prompt。</p></div>
+              <div id="s5" class="step"><div class="n">05</div><h3>建议</h3><p>综合收束输出建议 + knowledge_basis 来源判定。</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script>
+        const root = document.querySelector('[data-composition-id="03-path"]');
+        const tl = gsap.timeline({ paused: true });
+        tl.fromTo(root.querySelector("#p-k"), { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.35, ease: "power4.out" }, 0.08);
+        tl.fromTo(root.querySelector("#p-t"), { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.45, ease: "power4.out" }, 0.18);
+        tl.fromTo(root.querySelector("#p-q"), { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 0.45);
+        ["#s1","#s2","#s3","#s4","#s5"].forEach((sel, i) => {
+          const el = root.querySelector(sel);
+          tl.fromTo(el, { y: 40, opacity: 0 }, { y: 0, opacity: 0.55, duration: 0.35, ease: "power3.out" }, 0.7 + i * 0.08);
+        });
+        const widths = [0.2, 0.4, 0.6, 0.8, 1];
+        ["#s1","#s2","#s3","#s4","#s5"].forEach((sel, i) => {
+          const el = root.querySelector(sel);
+          tl.call(() => { el?.classList.add("on"); }, null, 1.6 + i * 1.05);
+          tl.to(el, { opacity: 1, duration: 0.35, ease: "power2.out" }, 1.6 + i * 1.05);
+          tl.to(root.querySelector("#p-fill"), { width: (1720 * widths[i]) + "px", duration: 0.45, ease: "power2.out" }, 1.6 + i * 1.05);
+        });
+        tl.to(root.querySelector("#p-world"), { x: -180, duration: 0.4, ease: "power4.in" }, 9.5);
+        window.__timelines["03-path"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

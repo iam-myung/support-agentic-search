@@ -1,0 +1,35 @@
+{
+  "version": "phase1-mini",
+  "cases": [
+    {
+      "id": "q-answered-01",
+      "category": "direct_answer",
+      "question": "How do I reset my password?",
+      "context": {},
+      "expected_status": "ANSWERED",
+      "required_evidence": ["chunk-reset-1"],
+      "forbidden_facts": ["admin backdoor"],
+      "needs_human": false
+    },
+    {
+      "id": "q-no-evidence-01",
+      "category": "no_evidence",
+      "question": "What is the unpublished beta SKU price?",
+      "context": {},
+      "expected_status": "NO_EVIDENCE",
+      "required_evidence": [],
+      "forbidden_facts": ["$999"],
+      "needs_human": false
+    },
+    {
+      "id": "q-conflict-01",
+      "category": "conflict",
+      "question": "Does password reset require MFA?",
+      "context": {},
+      "expected_status": "CONFLICT",
+      "required_evidence": ["chunk-mfa-yes", "chunk-mfa-no"],
+      "forbidden_facts": [],
+      "needs_human": false
+    }
+  ]
+}

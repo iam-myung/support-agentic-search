@@ -1,0 +1,41 @@
+# Local environments and secrets
+.venv/
+.env
+*.pem
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.tox/
+.cache/
+
+# Local test / eval outputs
+eval_output/
+artifacts/evaluation/
+*.log
+.DS_Store
+
+.cursor/
+.docs/
+.devteam-agentos/
+
+# HyperFrames / Node local junk
+**/node_modules/
+**/.hyperframes/
+**/.thumbnails/
+videos/**/renders/
+*.mp4
+
+# Unrelated local video experiment (has its own .git)
+videos/physics-curve-motion/
+

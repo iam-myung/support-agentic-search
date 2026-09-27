@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>引用原文</title>
+  <link rel="stylesheet" href="/static/workbench.css" />
+</head>
+<body>
+  <main class="workbench">
+    <p><a href="/">← 返回工作台</a></p>
+    {% if found %}
+    <h1>引用原文</h1>
+    <p class="meta">来源：{{ source_title_snapshot or "（未知）" }}</p>
+    <p class="meta">evidence：<code>{{ evidence_id }}</code></p>
+    <blockquote class="quote">{{ quote_snapshot }}</blockquote>
+    {% else %}
+    <h1>未找到引用</h1>
+    <p>investigation {{ investigation_id }} / evidence {{ evidence_id }}</p>
+    {% endif %}
+  </main>
+</body>
+</html>

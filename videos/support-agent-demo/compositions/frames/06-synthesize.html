@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh">
+  <head><meta charset="UTF-8" /><title>06-synthesize</title></head>
+  <body>
+    <template>
+      <style>
+        #root { position:absolute; inset:0; overflow:hidden; font-family:system-ui,"Segoe UI",sans-serif; color:#0f172a; }
+        .bg { position:absolute; inset:0; background:#070b10; }
+        .world { position:absolute; inset:0; will-change:transform; }
+        .head { position:absolute; left:100px; top:60px; color:#f8fafc; }
+        .kicker { font-family:ui-monospace,Consolas,monospace; color:#5eead4; letter-spacing:.16em; font-size:16px; font-weight:700; }
+        .title { font-size:44px; font-weight:800; margin:8px 0 0; color:#f8fafc; }
+        .lane { position:absolute; width:500px; border-radius:18px; padding:26px; border:1px solid rgba(45,212,191,.3); background:rgba(248,250,252,.96); box-shadow:0 0 40px rgba(15,118,110,.2); }
+        .lane h3 { margin:0 0 10px; font-size:24px; }
+        .lane p { margin:0; font-size:17px; line-height:1.5; color:rgba(15,23,42,.7); }
+        #ln-local { left:90px; top:250px; } #ln-web { left:90px; top:560px; }
+        .merge { position:absolute; right:100px; top:280px; width:740px; min-height:380px; border-radius:24px; background:linear-gradient(150deg,#14b8a6,#0f766e 45%,#115e59); color:#fff; padding:36px 40px; box-shadow:0 0 80px rgba(20,184,166,.45); }
+        .merge .badge { display:inline-block; background:rgba(255,255,255,.2); border-radius:999px; padding:8px 14px; font-family:ui-monospace,Consolas,monospace; margin-bottom:14px; }
+        .merge h3 { margin:0 0 12px; font-size:34px; }
+        .merge p { margin:0; font-size:22px; line-height:1.45; }
+        svg.beams { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+        .beam { fill:none; stroke:#2dd4bf; stroke-width:3; filter:drop-shadow(0 0 8px #2dd4bf); }
+        .core-glow { position:absolute; right:280px; top:380px; width:280px; height:280px; border-radius:50%; background:radial-gradient(circle,rgba(45,212,191,.45),transparent 70%); filter:blur(10px); opacity:0; }
+      </style>
+      <div id="root" data-composition-id="06-synthesize" data-width="1920" data-height="1080" data-duration="9.4">
+        <div id="s-bg" class="clip bg" data-start="0" data-duration="9.5" data-track-index="0"></div>
+        <div id="s-layer" class="clip" data-start="0" data-duration="9.5" data-track-index="1" style="inset:0;position:absolute">
+          <div id="s-world" class="world">
+            <div class="head">
+              <div id="s-k" class="kicker">PHASE · 综合收束（非工具）</div>
+              <h2 id="s-t" class="title">双源汇入 → knowledge_basis 判定</h2>
+            </div>
+            <div id="s-glow" class="core-glow"></div>
+            <svg class="beams" viewBox="0 0 1920 1080">
+              <path id="b1" class="beam" d="M590 320 C820 320, 900 420, 1080 420" />
+              <path id="b2" class="beam" d="M590 640 C820 640, 900 500, 1080 480" />
+            </svg>
+            <div id="ln-local" class="lane"><h3>LOCAL</h3><p>本地政策：重置前需完成邮箱 MFA。FAQ：等待确认邮件。</p></div>
+            <div id="ln-web" class="lane"><h3>WEB</h3><p>公开资料：敏感操作启用第二因子；重置前验证持有人。</p></div>
+            <div id="merge" class="merge">
+              <div class="badge">knowledge_basis → MIXED</div>
+              <h3>建议草稿</h3>
+              <p>请按本地政策完成邮箱 MFA 后再结束重置；公开最佳实践同样建议启用第二因子。答复客户前请核对引用链接。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script>
+        const root = document.querySelector('[data-composition-id="06-synthesize"]');
+        const tl = gsap.timeline({ paused: true });
+        ["#b1","#b2"].forEach((sel) => {
+          const el = root.querySelector(sel);
+          if (!el) return;
+          const len = el.getTotalLength();
+          el.style.strokeDasharray = String(len);
+          el.style.strokeDashoffset = String(len);
+        });
+        tl.fromTo(root.querySelector("#s-k"), { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.35, ease: "power4.out" }, 0.08);
+        tl.fromTo(root.querySelector("#s-t"), { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.45, ease: "power4.out" }, 0.18);
+        tl.fromTo(root.querySelector("#ln-local"), { x: -120, opacity: 0, rotate: -6 }, { x: 0, opacity: 1, rotate: 0, duration: 0.55, ease: "power4.out" }, 0.6);
+        tl.fromTo(root.querySelector("#ln-web"), { x: -120, opacity: 0, rotate: 6 }, { x: 0, opacity: 1, rotate: 0, duration: 0.55, ease: "power4.out" }, 0.85);
+        tl.to(root.querySelector("#b1"), { strokeDashoffset: 0, duration: 0.7, ease: "power2.inOut" }, 1.4);
+        tl.to(root.querySelector("#b2"), { strokeDashoffset: 0, duration: 0.7, ease: "power2.inOut" }, 1.55);
+        tl.fromTo(root.querySelector("#s-glow"), { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1.2, duration: 0.5 }, 2.0);
+        tl.fromTo(root.querySelector("#merge"), { scale: 0.55, opacity: 0, filter: "blur(16px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.7, ease: "back.out(1.4)" }, 2.15);
+        tl.to(root.querySelector("#merge"), { boxShadow: "0 0 120px rgba(45,212,191,0.7)", duration: 0.45, yoyo: true, repeat: 2 }, 2.9);
+        tl.to(root.querySelector("#s-world"), { x: -180, duration: 0.4, ease: "power4.in" }, 8.5);
+        window.__timelines["06-synthesize"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

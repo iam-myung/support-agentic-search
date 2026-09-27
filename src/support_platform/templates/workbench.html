@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>客服工作台</title>
+  <link rel="stylesheet" href="/static/workbench.css" />
+  <script src="/static/workbench.js" defer></script>
+</head>
+<body>
+  <main class="workbench">
+    <h1>客服工作台</h1>
+    <p class="lede">提交问题、查看调查摘要与引用，并记录反馈。</p>
+
+    <section id="auth-panel" class="panel auth" data-auth-login>
+      <h2>登录</h2>
+      <form id="login-form" data-auth-login>
+        <label for="username">用户名</label>
+        <input id="username" name="username" type="text" autocomplete="username" required />
+        <label for="password">密码</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" required />
+        <button id="login-btn" type="submit">登录</button>
+        <p id="login-error" class="banner error" role="alert" hidden></p>
+      </form>
+      <div id="session-bar" class="session-bar" hidden>
+        <span id="session-label"></span>
+        <button id="logout-btn" type="button">退出</button>
+      </div>
+    </section>
+
+    {% if form_error %}
+    <p class="banner error" role="alert">{{ form_error }}</p>
+    {% endif %}
+
+    <div id="investigator" data-requires-auth="true">
+      <form id="investigate-form" method="post" action="/" data-disable-on-submit="true">
+        <label for="question">问题</label>
+        <textarea id="question" name="question" rows="4" required maxlength="4000"
+                  placeholder="描述客户问题…"></textarea>
+
+        <div class="context-row">
+          <label for="error_code">error_code（可选）</label>
+          <input id="error_code" name="error_code" type="text" />
+          <label for="product_version">product_version（可选）</label>
+          <input id="product_version" name="product_version" type="text" />
+        </div>
+
+        <button id="submit-btn" type="submit">提交调查</button>
+        <button id="v2-submit-btn" type="button">提交调查（v2 + 进度）</button>
+      </form>
+
+      <section id="progress-panel" class="panel progress" data-progress data-sse
+               data-events-base="/api/v2/investigations/"
+               aria-live="polite" hidden>
+        <h2>调查进度</h2>
+        <p>ID：<code id="progress-id"></code></p>
+        <p>任务态：<strong id="progress-task-status">—</strong></p>
+        <ul id="progress-events" class="steps"></ul>
+        <div id="answer-stream" class="suggestion" aria-live="polite"></div>
+      </section>
+
+      <section id="hitl-panel" class="panel hitl" data-hitl hidden>
+        <h2>人工介入</h2>
+        <p id="hitl-reason" class="lede"></p>
+        <input type="hidden" id="hitl-interrupt-id" />
+        <label for="hitl-input">补充 / 修改内容（可选）</label>
+        <textarea id="hitl-input" rows="3" maxlength="4000"></textarea>
+        <div class="hitl-actions">
+          <button type="button" data-hitl-action="SUPPLY">SUPPLY 补充</button>
+          <button type="button" data-hitl-action="APPROVE">APPROVE 确认</button>
+          <button type="button" data-hitl-action="EDIT">EDIT 修改</button>
+          <button type="button" data-hitl-action="REJECT">REJECT 拒绝</button>
+          <button type="button" data-hitl-cancel>取消调查 cancel</button>
+        </div>
+        <p id="hitl-error" class="banner error" role="alert" hidden></p>
+      </section>
+    </div>
+
+    {% if failure %}
+    <section class="panel failure" data-task-status="FAILED" aria-live="polite">
+      <h2>调查失败</h2>
+      {% if failure.id %}<p>调查 ID：<code>{{ failure.id }}</code></p>{% endif %}
+      <p>错误码：<strong>{{ failure.error_code }}</strong>
+        {% if failure.task_status %}（{{ failure.task_status }}）{% endif %}
+      </p>
+      {% if failure.detail %}<p>{{ failure.detail }}</p>{% endif %}
+      <h3>已完成步骤</h3>
+      <ul class="steps" data-process-timeline>
+        {% for step in failure.public_steps %}
+        <li>
+          {% if step.label %}{{ step.label }}{% else %}<code>{{ step.kind }}</code>{% endif %}
+          {% if step.hit_count is defined %} · hits {{ step.hit_count }}{% endif %}
+        </li>
+        {% else %}
+        <li>（无公开步骤）</li>
+        {% endfor %}
+      </ul>
+      <p class="retry-hint">可重试：修正问题或稍后再次提交。</p>
+      <p><a class="retry" href="/">重试</a></p>
+    </section>
+    {% endif %}
+
+    {% if result %}
+    <section class="panel result"
+             data-task-status="{{ result.task_status }}"
+             data-result-status="{{ result.result_status }}">
+      <h2>调查结果</h2>
+      <p>ID：<code>{{ result.id }}</code></p>
+      <p>状态：<strong>{{ result.result_status }}</strong>
+        （task：{{ result.task_status }}）</p>
+
+      <h3>公开步骤</h3>
+      <ul class="steps" data-process-timeline>
+        {% for step in result.public_steps %}
+        <li>
+          {% if step.label %}{{ step.label }}{% else %}<code>{{ step.kind }}</code>{% endif %}
+          {% if step.hit_count is defined %} · hits {{ step.hit_count }}{% endif %}
+        </li>
+        {% else %}
+        <li>（无）</li>
+        {% endfor %}
+      </ul>
+
+      <h3>建议</h3>
+      <div class="suggestion" id="suggestion-text">
+        {% if result.output and result.output.summary %}
+        {{ result.output.summary }}
+        {% else %}
+        （无建议正文）
+        {% endif %}
+      </div>
+      <button type="button" id="copy-suggestion" data-copy-target="suggestion-text">复制建议</button>
+
+      <h3>引用</h3>
+      <ul class="citations">
+        {% for ev in result.evidence or [] %}
+        <li>
+          <a href="/investigations/{{ result.id }}/evidence/{{ ev.id }}">
+            打开引用 {{ ev.id }}
+            {% if ev.source_title_snapshot %}（{{ ev.source_title_snapshot }}）{% endif %}
+          </a>
+        </li>
+        {% else %}
+        <li>（无引用）</li>
+        {% endfor %}
+      </ul>
+
+      {% if result.task_status == "COMPLETED" %}
+      <h3>反馈</h3>
+      <form class="feedback" method="post" action="/api/investigations/{{ result.id }}/feedback">
+        <button type="submit" name="action" value="ADOPTED">采纳 ADOPTED</button>
+        <button type="submit" name="action" value="EDITED">需修改 EDITED</button>
+        <button type="submit" name="action" value="ESCALATED">转人工 ESCALATED</button>
+      </form>
+      {% endif %}
+    </section>
+    {% endif %}
+  </main>
+</body>
+</html>

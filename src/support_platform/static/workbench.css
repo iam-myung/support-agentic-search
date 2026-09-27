@@ -1,0 +1,127 @@
+/* Local workbench — native CSS (SPEC §1). */
+:root {
+  --ink: #1a1f24;
+  --muted: #5a6570;
+  --bg: #f4f6f8;
+  --panel: #ffffff;
+  --accent: #0b6e4f;
+  --danger: #9b1d20;
+  --line: #d5dde5;
+  --font: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  color: var(--ink);
+  background: linear-gradient(160deg, #e8eef2 0%, var(--bg) 45%, #eef2f0 100%);
+  min-height: 100vh;
+}
+
+.workbench {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+h1 { font-size: 1.75rem; margin: 0 0 0.35rem; }
+.lede { color: var(--muted); margin: 0 0 1.5rem; }
+
+label { display: block; font-size: 0.9rem; margin: 0.75rem 0 0.25rem; }
+
+textarea,
+input[type="text"] {
+  width: 100%;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font: inherit;
+  background: var(--panel);
+}
+
+.context-row { display: grid; gap: 0.5rem; margin-top: 0.5rem; }
+
+button[type="submit"],
+#copy-suggestion,
+#login-btn,
+#logout-btn,
+#v2-submit-btn,
+.hitl-actions button {
+  margin-top: 1rem;
+  margin-right: 0.4rem;
+  padding: 0.55rem 1rem;
+  border: 0;
+  border-radius: 6px;
+  background: var(--accent);
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
+input[type="password"] {
+  width: 100%;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font: inherit;
+  background: var(--panel);
+}
+
+.session-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.panel.auth { border-color: #b8c9c0; }
+.panel.progress { border-color: #a8c0d4; }
+.panel.hitl { border-color: #d4c4a8; }
+
+.hitl-actions { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+#v2-submit-btn { background: #2c5f7c; }
+
+button[disabled] { opacity: 0.6; cursor: wait; }
+
+.panel {
+  margin-top: 1.75rem;
+  padding: 1.1rem 1.2rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.panel.failure { border-color: #e2b6b7; }
+.panel.failure h2 { color: var(--danger); }
+
+.banner.error {
+  background: #fde8e8;
+  color: var(--danger);
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+}
+
+.suggestion {
+  white-space: pre-wrap;
+  padding: 0.75rem;
+  background: var(--bg);
+  border-radius: 6px;
+}
+
+.quote {
+  margin: 1rem 0;
+  padding: 1rem 1.1rem;
+  background: var(--panel);
+  border-left: 4px solid var(--accent);
+  white-space: pre-wrap;
+}
+
+.retry { font-weight: 600; color: var(--accent); }
+.retry-hint { color: var(--muted); }
+
+.feedback button { margin-right: 0.4rem; background: #2c3e50; }
+
+ul.steps, ul.citations { padding-left: 1.2rem; }
+code { font-size: 0.9em; }

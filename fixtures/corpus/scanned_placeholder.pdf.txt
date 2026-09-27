@@ -1,0 +1,1 @@
+"""Synthetic scanned PDF placeholder: zero extractable text bytes for S2 tests."""

@@ -1,0 +1,4 @@
+﻿企业级客户支持智能体平台 — 对话式 Agentic Search
+客服对话主入口；公开过程轨迹；建议与来源披露（LOCAL / WEB / MIXED）
+数据流：用户提问 → Agent 规划 → local_retrieve → web_search → 综合 → knowledge_basis
+演示问题：密码重置要不要做 MFA？请对照本地政策与公开最佳实践。

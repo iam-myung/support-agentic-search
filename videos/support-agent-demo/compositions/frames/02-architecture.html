@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh">
+  <head><meta charset="UTF-8" /><title>02-architecture</title></head>
+  <body>
+    <template>
+      <style>
+        #root { position:absolute; inset:0; overflow:hidden; color:#f8fafc; font-family:system-ui,"Segoe UI",sans-serif; }
+        .bg { position:absolute; inset:0; background:#070b10; }
+        .glow { position:absolute; width:1000px; height:520px; left:50%; top:48%; transform:translate(-50%,-50%); background:radial-gradient(ellipse,rgba(15,118,110,.28),transparent 70%); filter:blur(20px); }
+        .world { position:absolute; inset:0; will-change:transform; }
+        .head { position:absolute; left:100px; top:56px; }
+        .kicker { font-family:ui-monospace,Consolas,monospace; font-size:16px; letter-spacing:.2em; color:#5eead4; margin-bottom:10px; }
+        .title { font-size:44px; font-weight:800; letter-spacing:-.03em; margin:0 0 8px; }
+        .flow { font-size:18px; color:rgba(248,250,252,.55); margin:0; font-family:ui-monospace,Consolas,monospace; }
+        .stage { position:absolute; left:70px; right:70px; top:200px; height:720px; }
+        .card {
+          position:absolute; width:288px; min-height:400px; border-radius:18px; padding:24px 22px;
+          border:1px solid rgba(15,23,42,.08); background:#f4f7f6; color:#0f172a;
+          box-shadow:0 16px 40px rgba(0,0,0,.4);
+        }
+        .card .halo {
+          position:absolute; inset:-3px; border-radius:20px; border:2px solid rgba(45,212,191,.85);
+          box-shadow:0 0 28px rgba(45,212,191,.45); opacity:0; pointer-events:none;
+        }
+        .idx { font-family:ui-monospace,Consolas,monospace; color:#0f766e; font-size:14px; font-weight:700; margin-bottom:12px; }
+        .name { font-size:26px; font-weight:800; margin:0 0 12px; color:#042f2e; }
+        .desc { font-size:16px; line-height:1.55; color:rgba(15,23,42,.72); margin:0; }
+        .beam {
+          position:absolute; top:420px; height:3px;
+          background:linear-gradient(90deg,transparent,#2dd4bf,transparent);
+          box-shadow:0 0 14px #2dd4bf; opacity:0; transform-origin:left center;
+        }
+        .pkt {
+          position:absolute; top:408px; width:26px; height:26px; border-radius:50%;
+          background:#2dd4bf; box-shadow:0 0 20px #2dd4bf; opacity:0;
+        }
+        #c1 { left:30px; top:70px; } #c2 { left:360px; top:70px; } #c3 { left:690px; top:70px; }
+        #c4 { left:1020px; top:70px; } #c5 { left:1350px; top:70px; }
+      </style>
+      <div id="root" data-composition-id="02-architecture" data-width="1920" data-height="1080" data-duration="12.5">
+        <div id="a-bg" class="clip bg" data-start="0" data-duration="12.5" data-track-index="0"></div>
+        <div id="a-layer" class="clip" data-start="0" data-duration="12.5" data-track-index="1" style="inset:0;position:absolute">
+          <div id="a-glow" class="glow"></div>
+          <div id="a-world" class="world">
+            <div class="head">
+              <div id="a-k" class="kicker">ARCHITECTURE</div>
+              <h2 id="a-t" class="title">五层栈：请求如何穿过整条链路</h2>
+              <p id="a-f" class="flow">UI → API → Agent → 双源工具 → 持久 / 审计</p>
+            </div>
+            <div class="stage">
+              <div id="beam" class="beam" style="left:60px;width:1520px"></div>
+              <div id="pkt" class="pkt" style="left:60px"></div>
+              <div id="c1" class="card"><div class="halo" id="h1"></div><div class="idx">01 · EDGE</div><h3 class="name">对话 UI</h3><p class="desc">官方入口 GET /<br/>多轮提问<br/>展示公开过程与建议</p></div>
+              <div id="c2" class="card"><div class="halo" id="h2"></div><div class="idx">02 · API</div><h3 class="name">会话 API</h3><p class="desc">OP-15 / 16 / 17<br/>鉴权与回合写入<br/>结构化输出回传</p></div>
+              <div id="c3" class="card"><div class="halo" id="h3"></div><div class="idx">03 · AGENT</div><h3 class="name">Agent 循环</h3><p class="desc">规划下一步<br/>白名单调工具<br/>硬上限到顶即停</p></div>
+              <div id="c4" class="card"><div class="halo" id="h4"></div><div class="idx">04 · TOOLS</div><h3 class="name">双源检索</h3><p class="desc">local_retrieve<br/>web_search<br/>综合收束生成建议</p></div>
+              <div id="c5" class="card"><div class="halo" id="h5"></div><div class="idx">05 · STORE</div><h3 class="name">持久层</h3><p class="desc">Postgres · Redis<br/>检查点<br/>审计轨迹</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script>
+        const root = document.querySelector('[data-composition-id="02-architecture"]');
+        const tl = gsap.timeline({ paused: true });
+        const cards = ["#c1","#c2","#c3","#c4","#c5"];
+        const halos = ["#h1","#h2","#h3","#h4","#h5"];
+
+        tl.fromTo(root.querySelector("#a-k"), { x: -50, opacity: 0 }, { x: 0, opacity: 1, duration: 0.35, ease: "power4.out" }, 0.05);
+        tl.fromTo(root.querySelector("#a-t"), { x: -60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: "power4.out" }, 0.15);
+        tl.fromTo(root.querySelector("#a-f"), { opacity: 0 }, { opacity: 1, duration: 0.35 }, 0.45);
+
+        cards.forEach((sel, i) => {
+          tl.fromTo(root.querySelector(sel), {
+            y: 56, opacity: 0,
+          }, {
+            y: 0, opacity: 1,
+            duration: 0.5, ease: "power3.out",
+          }, 0.55 + i * 0.1);
+        });
+
+        tl.fromTo(root.querySelector("#beam"), { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 0.85, duration: 0.65, ease: "power2.inOut" }, 1.35);
+        tl.fromTo(root.querySelector("#pkt"), { x: 0, opacity: 0 }, { opacity: 1, duration: 0.12 }, 1.95);
+        tl.to(root.querySelector("#pkt"), { x: 1480, duration: 2.8, ease: "power1.inOut" }, 2.05);
+
+        // 光点经过时：光环淡入淡出（只动 opacity），不抖 boxShadow / 不位移
+        halos.forEach((sel, i) => {
+          const t = 2.15 + i * 0.5;
+          tl.to(root.querySelector(sel), { opacity: 1, duration: 0.2, ease: "power2.out" }, t);
+          tl.to(root.querySelector(sel), { opacity: 0.35, duration: 0.55, ease: "power2.inOut" }, t + 0.35);
+        });
+        tl.to(root.querySelector("#pkt"), { opacity: 0, duration: 0.2 }, 5.0);
+        // 末段全体保留柔光，定镜，不再缓慢漂移（避免假颤抖）
+        tl.to(halos.map((s) => root.querySelector(s)), { opacity: 0.55, duration: 0.4, ease: "power2.out" }, 5.2);
+        tl.to(root.querySelector("#a-world"), { x: -200, duration: 0.4, ease: "power3.in" }, 11.5);
+
+        window.__timelines["02-architecture"] = tl;
+      </script>
+    </template>
+  </body>
+</html>

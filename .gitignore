@@ -3,6 +3,11 @@
 .env
 *.pem
 
+# Editor / agent scratch (never ship)
+.cursor/
+.docs/
+.devteam-agentos/
+
 # Python
 __pycache__/
 *.py[cod]
@@ -24,10 +29,6 @@ eval_output/
 artifacts/evaluation/
 *.log
 .DS_Store
-
-.cursor/
-.docs/
-.devteam-agentos/
 
 # HyperFrames / Node local junk
 **/node_modules/

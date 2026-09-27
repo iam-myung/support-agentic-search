@@ -1,10 +1,18 @@
 # support-agentic-search
 
 [![CI](https://github.com/iam-myung/support-agentic-search/actions/workflows/ci.yml/badge.svg)](https://github.com/iam-myung/support-agentic-search/actions/workflows/ci.yml)
+[![Pages](https://img.shields.io/badge/demo-GitHub%20Pages-0f766e)](https://iam-myung.github.io/support-agentic-search/)
 
 Enterprise customer-support agent with **agentic search** — local knowledge base + web evidence, public process, MIXED disclosure, and human handoff.
 
 企业级客服智能体平台：不是聊天玩具，而是**可核对的双源检索**。Agent 在白名单工具内规划调用，把本地政策与公开资料汇成建议，并标注来源；证据不足时可转人工。
+
+### Demo
+
+[![Watch the walkthrough](docs/media/poster.png)](https://iam-myung.github.io/support-agentic-search/)
+
+▶ **[GitHub Pages 演示页](https://iam-myung.github.io/support-agentic-search/)**（内嵌播放器）  
+仓库媒体：[`docs/media/support-agent-demo.mp4`](docs/media/support-agent-demo.mp4)
 
 ## 它解决什么问题
 
@@ -133,20 +141,16 @@ src/support_platform/     # 应用代码
 migrations/               # Alembic
 fixtures/corpus/          # 示例语料
 deploy/                   # 试点回退 Runbook
-videos/support-agent-demo/# HyperFrames 项目说明动画（预览源）
+docs/                     # GitHub Pages 演示页 + 内嵌 MP4
+videos/support-agent-demo/# HyperFrames 说明片源码（预览工程）
 tests/                    # pytest
 ```
 
 ## 演示动画
 
-`videos/support-agent-demo/` 是面向 GitHub / 作品集的静音说明片源码（价值 → 架构 → 主路径 → 双源数据流 → 综合判定 → 治理边界）。
-
-本地预览（需已安装 HyperFrames）：
-
-```bash
-cd videos/support-agent-demo
-npx hyperframes preview
-```
+- **在线页**：https://iam-myung.github.io/support-agentic-search/  
+- **仓库媒体**：`docs/media/support-agent-demo.mp4`（约 6MB）  
+- **源工程**：`videos/support-agent-demo/`（HyperFrames；可本地 `npx hyperframes preview`）
 
 ## 安全注意
 

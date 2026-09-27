@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>support-agentic-search · Demo</title>
+    <meta
+      name="description"
+      content="Enterprise customer-support agent with agentic search — architecture, data flow, and governance in one walkthrough."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700&family=IBM+Plex+Mono:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #070b10;
+        --bg-elev: #0f1618;
+        --ink: #f1f5f4;
+        --muted: rgba(241, 245, 244, 0.62);
+        --teal: #2dd4bf;
+        --teal-deep: #0f766e;
+        --line: rgba(45, 212, 191, 0.28);
+        --card: #f4f7f6;
+        --card-ink: #0f172a;
+      }
+
+      * { box-sizing: border-box; }
+      html, body { margin: 0; min-height: 100%; }
+      body {
+        font-family: "IBM Plex Sans", system-ui, sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(ellipse 80% 50% at 15% -10%, rgba(15, 118, 110, 0.45), transparent 55%),
+          radial-gradient(ellipse 60% 40% at 90% 10%, rgba(56, 189, 248, 0.12), transparent 50%),
+          var(--bg);
+        line-height: 1.5;
+      }
+
+      .wrap {
+        width: min(1080px, calc(100% - 2.5rem));
+        margin: 0 auto;
+        padding: 2.75rem 0 4rem;
+      }
+
+      .brand {
+        font-family: "IBM Plex Mono", ui-monospace, monospace;
+        font-size: 0.8rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--teal);
+        margin: 0 0 0.85rem;
+      }
+
+      h1 {
+        font-size: clamp(2rem, 4vw, 2.85rem);
+        font-weight: 700;
+        letter-spacing: -0.035em;
+        line-height: 1.1;
+        margin: 0 0 0.85rem;
+        max-width: 16ch;
+      }
+
+      h1 em {
+        font-style: normal;
+        color: var(--teal);
+      }
+
+      .lead {
+        margin: 0 0 1.75rem;
+        color: var(--muted);
+        font-size: 1.125rem;
+        max-width: 42ch;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-bottom: 2rem;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.7rem 1.1rem;
+        border-radius: 0.65rem;
+        font-weight: 600;
+        font-size: 0.95rem;
+        text-decoration: none;
+        border: 1px solid transparent;
+        transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+      }
+      .btn:hover { transform: translateY(-1px); }
+      .btn-primary {
+        background: var(--teal-deep);
+        color: #fff;
+        box-shadow: 0 0 0 1px rgba(45, 212, 191, 0.25), 0 10px 28px rgba(15, 118, 110, 0.35);
+      }
+      .btn-ghost {
+        background: transparent;
+        color: var(--ink);
+        border-color: var(--line);
+      }
+
+      .stage {
+        border-radius: 1.1rem;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        background: #000;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55), 0 0 40px rgba(15, 118, 110, 0.18);
+      }
+
+      video {
+        display: block;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16 / 9;
+        background: #000;
+      }
+
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem 1rem;
+        margin: 0.9rem 0 0;
+        font-family: "IBM Plex Mono", ui-monospace, monospace;
+        font-size: 0.78rem;
+        color: var(--muted);
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.35rem 0.65rem;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: rgba(15, 118, 110, 0.15);
+        color: var(--teal);
+      }
+
+      .grid {
+        margin-top: 2.5rem;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+      }
+
+      .card {
+        background: var(--card);
+        color: var(--card-ink);
+        border-radius: 0.9rem;
+        padding: 1.15rem 1.2rem;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+      }
+
+      .card h2 {
+        margin: 0 0 0.45rem;
+        font-size: 1.05rem;
+        letter-spacing: -0.02em;
+      }
+
+      .card p {
+        margin: 0;
+        font-size: 0.92rem;
+        color: rgba(15, 23, 42, 0.72);
+      }
+
+      .card .idx {
+        font-family: "IBM Plex Mono", ui-monospace, monospace;
+        font-size: 0.72rem;
+        color: var(--teal-deep);
+        font-weight: 600;
+        margin-bottom: 0.4rem;
+      }
+
+      footer {
+        margin-top: 2.75rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid rgba(248, 250, 252, 0.08);
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      footer a { color: var(--teal); }
+
+      @media (max-width: 800px) {
+        .grid { grid-template-columns: 1fr; }
+        h1 { max-width: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <p class="brand">support-agentic-search</p>
+      <h1>企业客服智能体<br /><em>Agentic Search</em> 演示</h1>
+      <p class="lead">
+        一次走完：价值定位 → 五层架构 → 业务主路径 → 双源数据流 → MIXED 判定 → 治理边界。
+      </p>
+
+      <div class="actions">
+        <a class="btn btn-primary" href="https://github.com/iam-myung/support-agentic-search">打开仓库</a>
+        <a class="btn btn-ghost" href="https://github.com/iam-myung/support-agentic-search#快速开始本地">本地启动说明</a>
+      </div>
+
+      <div class="stage">
+        <video
+          controls
+          playsinline
+          preload="metadata"
+          poster="media/poster.png"
+          aria-label="support-agentic-search product walkthrough"
+        >
+          <source src="media/support-agent-demo.mp4" type="video/mp4" />
+          你的浏览器不支持 HTML5 video。请
+          <a href="media/support-agent-demo.mp4">下载 MP4</a>。
+        </video>
+      </div>
+      <p class="meta">
+        <span class="pill">1920×1080 · silent</span>
+        <span>媒体路径：docs/media/support-agent-demo.mp4</span>
+      </p>
+
+      <section class="grid" aria-label="演示结构">
+        <article class="card">
+          <div class="idx">01 · ARCH</div>
+          <h2>架构怎么设计</h2>
+          <p>UI → API → Agent 循环 → 双源工具 → Postgres / Redis / 审计。</p>
+        </article>
+        <article class="card">
+          <div class="idx">02 · FLOW</div>
+          <h2>数据如何流动</h2>
+          <p>local_retrieve 与 web_search 汇入上下文，收束为可核对建议。</p>
+        </article>
+        <article class="card">
+          <div class="idx">03 · BOUNDARY</div>
+          <h2>边界如何守住</h2>
+          <p>工具硬上限、公开过程 ≠ CoT、MIXED 披露、可转人工。</p>
+        </article>
+      </section>
+
+      <footer>
+        MIT © 2026
+        <a href="https://github.com/iam-myung">iam-myung</a>
+        ·
+        <a href="https://github.com/iam-myung/support-agentic-search">source</a>
+      </footer>
+    </main>
+  </body>
+</html>

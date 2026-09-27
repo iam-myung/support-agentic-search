@@ -35,6 +35,7 @@ artifacts/evaluation/
 **/.thumbnails/
 videos/**/renders/
 *.mp4
+!docs/media/*.mp4
 
 # Unrelated local video experiment (has its own .git)
 videos/physics-curve-motion/

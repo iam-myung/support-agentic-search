@@ -160,4 +160,4 @@ pytest
 
 ## License
 
-未单独声明前，默认保留所有权利；若需开源协议请再补充 `LICENSE`。
+[MIT](LICENSE) © 2026 iam-myung

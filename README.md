@@ -1,5 +1,7 @@
 # support-agentic-search
 
+[![CI](https://github.com/iam-myung/support-agentic-search/actions/workflows/ci.yml/badge.svg)](https://github.com/iam-myung/support-agentic-search/actions/workflows/ci.yml)
+
 Enterprise customer-support agent with **agentic search** — local knowledge base + web evidence, public process, MIXED disclosure, and human handoff.
 
 企业级客服智能体平台：不是聊天玩具，而是**可核对的双源检索**。Agent 在白名单工具内规划调用，把本地政策与公开资料汇成建议，并标注来源；证据不足时可转人工。
@@ -152,11 +154,17 @@ npx hyperframes preview
 - 公开过程仅暴露可读步骤与来源判定  
 - 试点回退见 [`deploy/S17_RUNBOOK.md`](deploy/S17_RUNBOOK.md)
 
-## 测试
+## 测试与 CI
+
+本地（需 Postgres + Redis，与 compose 一致）：
 
 ```bash
+docker compose up -d db redis
+alembic upgrade head
 pytest
 ```
+
+GitHub Actions：push / PR 到 `main` 时自动跑迁移 + `pytest`（服务：`pgvector/pg16` + Redis）。工作流见 [`.github/workflows/ci.yml`](.github/workflows/ci.yml)。
 
 ## License
 
